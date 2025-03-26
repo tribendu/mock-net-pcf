@@ -13,5 +13,6 @@ namespace MockNetPcf.Api.Models
         public int StatusCode { get; set; }
         public Dictionary<string, string> ResponseHeaders { get; set; }
         public string ResponseBody { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }

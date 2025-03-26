@@ -73,12 +73,15 @@ A PCF-deployable service that mocks external and internal services using WireMoc
 ```bash
 # Start mock server
 POST /api/mock/start
+Response: 200 OK (success), 400 Bad Request (failure)
 
 # Stop mock server
 POST /api/mock/stop
+Response: 200 OK (success), 400 Bad Request (failure)
 
 # Get server status
 GET /api/mock/status
+Response: 200 OK with {"isRunning": true|false}
 
 # Add new mock
 POST /api/mock
@@ -86,11 +89,25 @@ Content-Type: application/json
 {
     "path": "/api/resource",
     "method": "GET",
-    "response": {
-        "status": 200,
-        "body": {"message": "Success"}
-    }
+    "statusCode": 200,
+    "requestHeaders": {"Content-Type": "application/json"},
+    "requestBody": "{\"id\": 1}",
+    "responseHeaders": {"Content-Type": "application/json"},
+    "responseBody": "{\"message\": \"Success\"}"
 }
+Response: 200 OK (success), 400 Bad Request (failure)
+
+# Get all mocks
+GET /api/mock
+Response: 200 OK with array of mock definitions
+
+# Remove mock
+DELETE /api/mock/{id}
+Response: 200 OK (success), 400 Bad Request (failure)
+
+# Reset all mocks
+POST /api/mock/reset
+Response: 200 OK (success), 400 Bad Request (failure)
 ```
 
 ### Recording Management
@@ -100,14 +117,18 @@ POST /api/recording/start
 Content-Type: application/json
 {
     "targetUrl": "https://api.example.com",
+    "saveMapping": true,
     "saveMappingToFile": "example-mapping.json"
 }
+Response: 200 OK (success), 400 Bad Request (failure)
 
 # Stop recording
 POST /api/recording/stop
+Response: 200 OK (success), 400 Bad Request (failure)
 
 # Get recording status
 GET /api/recording/status
+Response: 200 OK with {"isRecording": true|false}
 ```
 
 ## Configuration
@@ -116,6 +137,8 @@ Variable | Description | Default
 ---------|-------------|--------
 WIREMOCK_PORT | Mock server port | 9090
 WIREMOCK_ADMIN_PORT | Admin interface port | 9091
+WIREMOCK_STORAGE_PATH | Path for storing mock mappings | mocks
+WIREMOCK_ALLOWED_ORIGINS | CORS allowed origins | *
 MOCK_EXTERNAL_SERVICES | External services to mock | -
 MOCK_INTERNAL_SERVICES | Internal services to mock | -
 ASPNETCORE_ENVIRONMENT | Runtime environment | Production
@@ -142,6 +165,17 @@ ASPNETCORE_ENVIRONMENT | Runtime environment | Production
    - Check network/firewall settings
    - Review application logs
 
+4. HTTP Status Codes
+   - 200 OK: Operation completed successfully
+   - 400 Bad Request: Invalid input or operation failed
+   - 500 Internal Server Error: Unexpected server error
+
+5. Mock Mappings Storage
+   - By default, mappings are stored in memory
+   - When ReadStaticMappings is enabled, mappings are loaded from JSON files
+   - Files are stored in the '__admin/mappings' directory relative to application path
+   - WatchStaticMappings allows hot-reloading of mapping files
+
 ## Best Practices
 1. Mock Management
    - Use descriptive names for mock definitions
@@ -167,14 +201,28 @@ mock-netpcf/
 ├── src/
 │   ├── MockNetPcf.Api/
 │   │   ├── Controllers/
+│   │   │   ├── MockController.cs       # Endpoints for mock management
+│   │   │   └── RecordingController.cs  # Endpoints for recording management
 │   │   ├── Services/
+│   │   │   ├── MockService.cs          # WireMock server management
+│   │   │   └── RecordingService.cs     # Recording functionality
 │   │   ├── Models/
-│   │   └── Configuration/
+│   │   │   ├── MockDefinition.cs       # Mock request/response definition
+│   │   │   └── RecordingOptions.cs     # Recording configuration options
+│   │   ├── Configuration/
+│   │   │   └── WireMockConfig.cs       # WireMock server configuration
+│   │   └── Program.cs, Startup.cs      # Application bootstrap
 │   └── MockNetPcf.Tests/
-├── manifest.yml
-├── vars-dev.yml
-├── vars-qa.yml
-└── README.md
+│       ├── Services/
+│       │   ├── MockServiceTests.cs     # Unit tests for mock service
+│       │   └── RecordingServiceTests.cs # Unit tests for recording service
+│       └── Controllers/
+│           ├── MockControllerTests.cs   # Unit tests for mock endpoints
+│           └── RecordingControllerTests.cs # Unit tests for recording endpoints
+├── manifest.yml                         # PCF deployment manifest
+├── vars-dev.yml                         # DEV environment variables
+├── vars-qa.yml                          # QA environment variables
+└── README.md                            # Project documentation
 ```
 
 ## Contributing

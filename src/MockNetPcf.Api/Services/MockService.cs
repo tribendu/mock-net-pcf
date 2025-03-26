@@ -10,22 +10,71 @@ using WireMock.Settings;
 
 namespace MockNetPcf.Api.Services
 {
+    /// <summary>
+    /// Interface for managing mock API endpoints using WireMock.NET
+    /// </summary>
     public interface IMockService
     {
+        /// <summary>
+        /// Starts the WireMock server on configured port
+        /// </summary>
+        /// <returns>True if server started successfully, false otherwise</returns>
         Task<bool> StartServerAsync();
+
+        /// <summary>
+        /// Stops the running WireMock server
+        /// </summary>
+        /// <returns>True if server stopped successfully, false otherwise</returns>
         Task<bool> StopServerAsync();
+
+        /// <summary>
+        /// Adds a new mock endpoint definition to the server
+        /// </summary>
+        /// <param name="mockDefinition">The mock endpoint configuration</param>
+        /// <returns>True if mock was added successfully, false otherwise</returns>
         Task<bool> AddMockAsync(MockDefinition mockDefinition);
+
+        /// <summary>
+        /// Retrieves all configured mock endpoints
+        /// </summary>
+        /// <returns>Collection of mock definitions</returns>
         Task<IEnumerable<MockDefinition>> GetAllMocksAsync();
+
+        /// <summary>
+        /// Removes a specific mock endpoint by ID
+        /// </summary>
+        /// <param name="id">The ID of the mock to remove</param>
+        /// <returns>True if mock was removed successfully, false otherwise</returns>
         Task<bool> RemoveMockAsync(string id);
+
+        /// <summary>
+        /// Removes all configured mock endpoints
+        /// </summary>
+        /// <returns>True if mocks were reset successfully, false otherwise</returns>
         Task<bool> ResetMocksAsync();
+
+        /// <summary>
+        /// Checks if the WireMock server is currently running
+        /// </summary>
+        /// <returns>True if server is running, false otherwise</returns>
         bool IsServerRunning();
     }
 
+    /// <summary>
+    /// Implementation of IMockService using WireMock.NET
+    /// Manages mock API endpoints and server operations
+    /// 
+    /// Mapping Storage:
+    /// - By default, mappings are stored in memory
+    /// - When ReadStaticMappings is enabled, mappings can be loaded from JSON files
+    /// - Files are typically stored in the '__admin/mappings' directory relative to application path
+    /// - WatchStaticMappings allows hot-reloading of mapping files
+    /// </summary>
     public class MockService : IMockService
     {
         private readonly ILogger<MockService> _logger;
         private readonly WireMockConfig _config;
-        private WireMockServer _server;
+        private WireMockServer _server; // The WireMock server instance
 
         public MockService(ILogger<MockService> logger, IOptions<WireMockConfig> config)
         {
@@ -88,9 +137,37 @@ namespace MockNetPcf.Api.Services
 
         public Task<bool> AddMockAsync(MockDefinition mockDefinition)
         {
-            // Implementation to add a mock to the WireMock server
-            // This would convert the MockDefinition to a WireMock mapping
-            return Task.FromResult(true);
+            try
+            {
+                if (_server == null || !_server.IsStarted)
+                {
+                    _logger.LogError("WireMock server is not running");
+                    return Task.FromResult(false);
+                }
+
+                var response = new ResponseMessage
+                {
+                    StatusCode = mockDefinition.StatusCode,
+                    Headers = mockDefinition.ResponseHeaders,
+                    Body = mockDefinition.ResponseBody
+                };
+
+                _server
+                    .Given(Request.Create()
+                        .WithPath(mockDefinition.Path)
+                        .WithHeader(mockDefinition.RequestHeaders)
+                        .WithBody(mockDefinition.RequestBody)
+                        .UsingMethod(mockDefinition.Method))
+                    .RespondWith(response);
+
+                _logger.LogInformation($"Added mock for {mockDefinition.Method} {mockDefinition.Path} with status code {mockDefinition.StatusCode}");
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to add mock");
+                return Task.FromResult(false);
+            }
         }
 
         public Task<IEnumerable<MockDefinition>> GetAllMocksAsync()
