@@ -1,0 +1,5 @@
+environment: QA
+external_services: "https://qa-external-api1.example.com,https://qa-external-api2.example.com"
+internal_services: "https://qa-internal-service1.example.com,https://qa-internal-service2.example.com"
+wiremock_port: 9090
+wiremock_admin_port: 9091

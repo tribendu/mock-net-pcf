@@ -1,0 +1,5 @@
+environment: DEV
+external_services: "https://dev-external-api1.example.com,https://dev-external-api2.example.com"
+internal_services: "https://dev-internal-service1.example.com,https://dev-internal-service2.example.com"
+wiremock_port: 9090
+wiremock_admin_port: 9091

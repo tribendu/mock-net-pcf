@@ -1,0 +1,14 @@
+---
+applications:
+- name: mock-netpcf-((environment))
+  memory: 512M
+  instances: 1
+  path: src/MockNetPcf.Api/bin/Release/net6.0/publish
+  buildpacks:
+  - dotnet_core_buildpack
+  env:
+    ASPNETCORE_ENVIRONMENT: ((environment))
+    MOCK_EXTERNAL_SERVICES: ((external_services))
+    MOCK_INTERNAL_SERVICES: ((internal_services))
+    WIREMOCK_PORT: ((wiremock_port))
+    WIREMOCK_ADMIN_PORT: ((wiremock_admin_port))
