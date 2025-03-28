@@ -1,0 +1,7 @@
+c:\Users\tribe\OneDrive\Documents\GitHub\mock-netpcf\src\MockNetPcf.Api\obj\Release\net5.0\MockNetPcf.Api.csproj.AssemblyReference.cache
+c:\Users\tribe\OneDrive\Documents\GitHub\mock-netpcf\src\MockNetPcf.Api\obj\Release\net5.0\MockNetPcf.Api.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\tribe\OneDrive\Documents\GitHub\mock-netpcf\src\MockNetPcf.Api\obj\Release\net5.0\MockNetPcf.Api.AssemblyInfoInputs.cache
+c:\Users\tribe\OneDrive\Documents\GitHub\mock-netpcf\src\MockNetPcf.Api\obj\Release\net5.0\MockNetPcf.Api.AssemblyInfo.cs
+c:\Users\tribe\OneDrive\Documents\GitHub\mock-netpcf\src\MockNetPcf.Api\obj\Release\net5.0\MockNetPcf.Api.csproj.CoreCompileInputs.cache
+c:\Users\tribe\OneDrive\Documents\GitHub\mock-netpcf\src\MockNetPcf.Api\obj\Release\net5.0\MockNetPcf.Api.MvcApplicationPartsAssemblyInfo.cs
+c:\Users\tribe\OneDrive\Documents\GitHub\mock-netpcf\src\MockNetPcf.Api\obj\Release\net5.0\MockNetPcf.Api.MvcApplicationPartsAssemblyInfo.cache

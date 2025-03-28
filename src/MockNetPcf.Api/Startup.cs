@@ -26,11 +26,22 @@ namespace MockNetPcf.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Register WireMock configuration
+            services.Configure<WireMockConfig>(
+                Configuration.GetSection("WireMock"));
+
+            // Register services with proper dependency injection
+            services.AddSingleton<IMockService, MockService>();
+            services.AddSingleton<IRecordingService, RecordingService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MockNetPcf.Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { 
+                    Title = "MockNetPcf.Api", 
+                    Version = "v1",
+                    Description = "API for managing mock services and recording with WireMock.NET"
+                });
             });
         }
 

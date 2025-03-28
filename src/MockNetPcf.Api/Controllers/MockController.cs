@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MockNetPcf.Api.Models;
@@ -7,8 +9,12 @@ using MockNetPcf.Api.Services;
 
 namespace MockNetPcf.Api.Controllers
 {
+    /// <summary>
+    /// Controller for managing mock API endpoints
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class MockController : ControllerBase
     {
         private readonly ILogger<MockController> _logger;
@@ -20,26 +26,70 @@ namespace MockNetPcf.Api.Controllers
             _mockService = mockService;
         }
 
+        /// <summary>
+        /// Starts the mock server
+        /// </summary>
+        /// <returns>Status message indicating success or failure</returns>
+        /// <response code="200">Server started successfully</response>
+        /// <response code="400">Failed to start server</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost("start")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> StartServer()
         {
-            var result = await _mockService.StartServerAsync();
-            if (result)
+            try
             {
-                return Ok(new { message = "Mock server started successfully" });
+                var result = await _mockService.StartServerAsync();
+                if (result)
+                {
+                    _logger.LogInformation("Mock server started successfully");
+                    return Ok(new { message = "Mock server started successfully" });
+                }
+                
+                _logger.LogWarning("Failed to start mock server");
+                return BadRequest(new { message = "Failed to start mock server" });
             }
-            return BadRequest(new { message = "Failed to start mock server" });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error starting mock server");
+                return StatusCode(StatusCodes.Status500InternalServerError, 
+                    new { message = "An unexpected error occurred while starting the server", error = ex.Message });
+            }
         }
 
+        /// <summary>
+        /// Stops the mock server
+        /// </summary>
+        /// <returns>Status message indicating success or failure</returns>
+        /// <response code="200">Server stopped successfully</response>
+        /// <response code="400">Failed to stop server</response>
+        /// <response code="500">Internal server error</response>
         [HttpPost("stop")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> StopServer()
         {
-            var result = await _mockService.StopServerAsync();
-            if (result)
+            try
             {
-                return Ok(new { message = "Mock server stopped successfully" });
+                var result = await _mockService.StopServerAsync();
+                if (result)
+                {
+                    _logger.LogInformation("Mock server stopped successfully");
+                    return Ok(new { message = "Mock server stopped successfully" });
+                }
+                
+                _logger.LogWarning("Failed to stop mock server");
+                return BadRequest(new { message = "Failed to stop mock server" });
             }
-            return BadRequest(new { message = "Failed to stop mock server" });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error stopping mock server");
+                return StatusCode(StatusCodes.Status500InternalServerError, 
+                    new { message = "An unexpected error occurred while stopping the server", error = ex.Message });
+            }
         }
 
         [HttpGet("status")]
