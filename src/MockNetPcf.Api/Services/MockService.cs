@@ -7,6 +7,9 @@ using MockNetPcf.Api.Configuration;
 using MockNetPcf.Api.Models;
 using WireMock.Server;
 using WireMock.Settings;
+using WireMock.ResponseBuilders;
+using WireMock.RequestBuilders;
+using WireMock.Matchers;
 
 namespace MockNetPcf.Api.Services
 {
@@ -96,7 +99,6 @@ namespace MockNetPcf.Api.Services
                 {
                     Port = _config.Port,
                     StartAdminInterface = _config.StartAdminInterface,
-                    AdminPort = _config.AdminPort,
                     AllowPartialMapping = true,
                     ReadStaticMappings = true,
                     WatchStaticMappings = true,
@@ -145,20 +147,44 @@ namespace MockNetPcf.Api.Services
                     return Task.FromResult(false);
                 }
 
-                var response = new ResponseMessage
-                {
-                    StatusCode = mockDefinition.StatusCode,
-                    Headers = mockDefinition.ResponseHeaders,
-                    Body = mockDefinition.ResponseBody
-                };
+                var response = Response.Create()
+                    .WithStatusCode(mockDefinition.StatusCode)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBody(mockDefinition.ResponseBody);
 
-                _server
-                    .Given(Request.Create()
-                        .WithPath(mockDefinition.Path)
-                        .WithHeader(mockDefinition.RequestHeaders)
-                        .WithBody(mockDefinition.RequestBody)
-                        .UsingMethod(mockDefinition.Method))
-                    .RespondWith(response);
+                // Add each response header individually
+                foreach (var header in mockDefinition.ResponseHeaders)
+                {
+                    response = response.WithHeader(header.Key, header.Value);
+                }
+
+                // Check if the path contains DocuSign-style path parameters like {accountId} or {envelopeId}
+                if (mockDefinition.Path.Contains("{accountId}") || mockDefinition.Path.Contains("{envelopeId}"))
+                {
+                    // For DocuSign endpoints, use regex matching to handle path parameters
+                    string pathPattern = mockDefinition.Path
+                        .Replace("{accountId}", "[^/]+")
+                        .Replace("{envelopeId}", "[^/]+");
+                    
+                    _server
+                        .Given(Request.Create()
+                            .WithPath(new RegexMatcher(pathPattern))
+                            .UsingMethod(mockDefinition.Method)
+                            .WithBody(mockDefinition.RequestBody))
+                        .RespondWith(response);
+                    
+                    _logger.LogInformation($"Added DocuSign mock for {mockDefinition.Method} {mockDefinition.Path} with regex pattern {pathPattern}");
+                }
+                else
+                {
+                    // Standard path matching for non-DocuSign endpoints
+                    _server
+                        .Given(Request.Create()
+                            .WithPath(mockDefinition.Path)
+                            .UsingMethod(mockDefinition.Method)
+                            .WithBody(mockDefinition.RequestBody))
+                        .RespondWith(response);
+                }
 
                 _logger.LogInformation($"Added mock for {mockDefinition.Method} {mockDefinition.Path} with status code {mockDefinition.StatusCode}");
                 return Task.FromResult(true);

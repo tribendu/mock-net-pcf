@@ -7,24 +7,16 @@ using MockNetPcf.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
 builder.Services.AddControllers();
-
-// Register WireMock configuration
-builder.Services.Configure<WireMockConfig>(
-    builder.Configuration.GetSection("WireMock"));
-
-// Register services
+builder.Services.Configure<WireMockConfig>(builder.Configuration.GetSection("WireMock"));
 builder.Services.AddSingleton<IMockService, MockService>();
 builder.Services.AddSingleton<IRecordingService, RecordingService>();
-
-// Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo 
-    { 
-        Title = "Mock Service API", 
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Mock Service API",
         Version = "v1",
         Description = "API for managing mock services and recording with WireMock.NET"
     });
@@ -32,18 +24,16 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
 
-// Enable Swagger UI for all environments
 app.UseSwagger();
-app.UseSwaggerUI(c => 
+app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mock Service API v1");
-    c.RoutePrefix = string.Empty; // Set Swagger UI at the root
+    c.RoutePrefix = string.Empty;
 });
 
 app.UseHttpsRedirection();

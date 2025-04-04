@@ -1,0 +1,40 @@
+{
+  "documents": [
+    {
+      "documentId": "1",
+      "name": "Contract.pdf",
+      "type": "pdf",
+      "uri": "/restapi/v2.1/accounts/12345/envelopes/1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p/documents/1",
+      "order": "1",
+      "pages": "5",
+      "availableDocumentTypes": [
+        {
+          "type": "pdf",
+          "uri": "/restapi/v2.1/accounts/12345/envelopes/1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p/documents/1"
+        },
+        {
+          "type": "content",
+          "uri": "/restapi/v2.1/accounts/12345/envelopes/1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p/documents/1/content"
+        }
+      ]
+    },
+    {
+      "documentId": "2",
+      "name": "Appendix.pdf",
+      "type": "pdf",
+      "uri": "/restapi/v2.1/accounts/12345/envelopes/1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p/documents/2",
+      "order": "2",
+      "pages": "2",
+      "availableDocumentTypes": [
+        {
+          "type": "pdf",
+          "uri": "/restapi/v2.1/accounts/12345/envelopes/1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p/documents/2"
+        },
+        {
+          "type": "content",
+          "uri": "/restapi/v2.1/accounts/12345/envelopes/1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p/documents/2/content"
+        }
+      ]
+    }
+  ]
+}

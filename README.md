@@ -1,25 +1,29 @@
 # Mock Service for PCF with WireMock.NET
 
-A PCF-deployable service that mocks external and internal services using WireMock.NET. This service provides a REST API and Swagger UI to manage mocks and control recording functionality.
+A PCF-deployable service that mocks external and internal HTTP APIs using WireMock.NET. This service provides a REST API and Swagger UI to manage mocks; in full-feature mode, it also supports recording live API traffic, but a minimal build may have this disabled.
 
 ## Features
 
 - Mock external and internal HTTP services
-- Record and replay HTTP interactions
+- *Optional:* Record and replay HTTP interactions
+- DocuSign API mocking capabilities
 - Swagger UI for API documentation and testing
 - Environment-specific configurations (DEV, QA)
 - REST API for programmatic control
 - Configurable mock responses and behaviors
 - Support for stateful mocking scenarios
 - Request/response pattern matching
-- Dynamic response templating
+- Dynamic response templating with Handlebars.NET
+- Organized folder structure for mock responses, easily maintainable
 
 ## Prerequisites
 
-- .NET 6.0 SDK or later
+- .NET 8.0 SDK or later
 - Cloud Foundry CLI
 - Access to a PCF environment
 - Visual Studio 2022 or VS Code (recommended)
+- WireMock.NET NuGet package included automatically
+- Environment variables or vars-*.yml files configured per environment (see below)
 
 ## Getting Started
 
@@ -107,6 +111,10 @@ Response: 200 OK (success), 400 Bad Request (failure)
 
 # Reset all mocks
 POST /api/mock/reset
+Response: 200 OK (success), 400 Bad Request (failure)
+
+# Create DocuSign mocks
+POST /api/mock/docusign
 Response: 200 OK (success), 400 Bad Request (failure)
 ```
 
@@ -203,15 +211,23 @@ mock-netpcf/
 │   │   ├── Controllers/
 │   │   │   ├── MockController.cs       # Endpoints for mock management
 │   │   │   └── RecordingController.cs  # Endpoints for recording management
+│   │   ├── DocuSignMocks/              # DocuSign mock response templates
+│   │   │   ├── DocumentsResponse.json  # Mock for documents endpoint
+│   │   │   ├── EnvelopeResponse.json   # Mock for envelope endpoint
+│   │   │   ├── RecipientsResponse.json # Mock for recipients endpoint
+│   │   │   └── TemplatesResponse.json  # Mock for templates endpoint
 │   │   ├── Services/
 │   │   │   ├── MockService.cs          # WireMock server management
-│   │   │   └── RecordingService.cs     # Recording functionality
+│   │   │   ├── RecordingService.cs     # Recording functionality
+│   │   │   └── DocuSignRecordingHelper.cs # DocuSign recording helper
 │   │   ├── Models/
 │   │   │   ├── MockDefinition.cs       # Mock request/response definition
-│   │   │   └── RecordingOptions.cs     # Recording configuration options
+│   │   │   ├── RecordingOptions.cs     # Recording configuration options
+│   │   │   ├── DocuSignMockManager.cs  # DocuSign mock management
+│   │   │   └── DocuSignMockExample.cs  # DocuSign mock examples
 │   │   ├── Configuration/
 │   │   │   └── WireMockConfig.cs       # WireMock server configuration
-│   │   └── Program.cs, Startup.cs      # Application bootstrap
+│   │   └── Program.cs                  # Application bootstrap
 │   └── MockNetPcf.Tests/
 │       ├── Services/
 │       │   ├── MockServiceTests.cs     # Unit tests for mock service
