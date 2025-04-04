@@ -9,6 +9,7 @@ using WireMock.Server;
 using WireMock.Settings;
 using WireMock.ResponseBuilders;
 using WireMock.RequestBuilders;
+using WireMock.Matchers;
 
 namespace MockNetPcf.Api.Services
 {
@@ -157,12 +158,33 @@ namespace MockNetPcf.Api.Services
                     response = response.WithHeader(header.Key, header.Value);
                 }
 
-                _server
-                    .Given(Request.Create()
-                        .WithPath(mockDefinition.Path)
-                        .UsingMethod(mockDefinition.Method)
-                        .WithBody(mockDefinition.RequestBody))
-                    .RespondWith(response);
+                // Check if the path contains DocuSign-style path parameters like {accountId} or {envelopeId}
+                if (mockDefinition.Path.Contains("{accountId}") || mockDefinition.Path.Contains("{envelopeId}"))
+                {
+                    // For DocuSign endpoints, use regex matching to handle path parameters
+                    string pathPattern = mockDefinition.Path
+                        .Replace("{accountId}", "[^/]+")
+                        .Replace("{envelopeId}", "[^/]+");
+                    
+                    _server
+                        .Given(Request.Create()
+                            .WithPath(new RegexMatcher(pathPattern))
+                            .UsingMethod(mockDefinition.Method)
+                            .WithBody(mockDefinition.RequestBody))
+                        .RespondWith(response);
+                    
+                    _logger.LogInformation($"Added DocuSign mock for {mockDefinition.Method} {mockDefinition.Path} with regex pattern {pathPattern}");
+                }
+                else
+                {
+                    // Standard path matching for non-DocuSign endpoints
+                    _server
+                        .Given(Request.Create()
+                            .WithPath(mockDefinition.Path)
+                            .UsingMethod(mockDefinition.Method)
+                            .WithBody(mockDefinition.RequestBody))
+                        .RespondWith(response);
+                }
 
                 _logger.LogInformation($"Added mock for {mockDefinition.Method} {mockDefinition.Path} with status code {mockDefinition.StatusCode}");
                 return Task.FromResult(true);

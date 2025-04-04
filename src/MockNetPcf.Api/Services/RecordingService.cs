@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MockNetPcf.Api.Models;
-using WireMock.Server;
+using System.Collections.Generic;
 
 namespace MockNetPcf.Api.Services
 {
@@ -34,14 +34,8 @@ namespace MockNetPcf.Api.Services
     }
 
     /// <summary>
-    /// Implementation of IRecordingService using WireMock.NET
-    /// Records API interactions that can be used to generate mock definitions
-    /// 
-    /// Recording Process:
-    /// - Starts a proxy server that intercepts requests to the target API
-    /// - Records request/response pairs as they occur
-    /// - Saves recordings as mock mappings that can be replayed later
-    /// - Mappings are stored in the same location as regular mock mappings
+    /// Minimal implementation of IRecordingService
+    /// This is a placeholder implementation that doesn't actually record API interactions
     /// </summary>
     public class RecordingService : IRecordingService
     {
@@ -56,46 +50,21 @@ namespace MockNetPcf.Api.Services
             _isRecording = false;
         }
 
-        public async Task<bool> StartRecordingAsync(RecordingOptions options)
+        public Task<bool> StartRecordingAsync(RecordingOptions options)
         {
-            try
-            {
-                if (!_mockService.IsServerRunning())
-                {
-                    await _mockService.StartServerAsync();
-                }
-
-                // Implementation to start recording using WireMock proxy settings
-                _isRecording = true;
-                _logger.LogInformation($"Started recording for target URL: {options.TargetUrl}");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to start recording");
-                return false;
-            }
+            _logger.LogInformation("Recording feature is not implemented in this minimal version");
+            return Task.FromResult(false);
         }
 
         public Task<bool> StopRecordingAsync()
         {
-            try
-            {
-                // Implementation to stop recording
-                _isRecording = false;
-                _logger.LogInformation("Stopped recording");
-                return Task.FromResult(true);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to stop recording");
-                return Task.FromResult(false);
-            }
+            _logger.LogInformation("Recording feature is not implemented in this minimal version");
+            return Task.FromResult(false);
         }
 
         public bool IsRecording()
         {
-            return _isRecording;
+            return false;
         }
     }
 }

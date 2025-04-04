@@ -1,0 +1,69 @@
+{
+  "signers": [
+    {
+      "recipientId": "1",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "status": "sent",
+      "deliveredDateTime": null,
+      "signedDateTime": null,
+      "routingOrder": "1",
+      "requireIdLookup": false,
+      "idCheckConfigurationName": null,
+      "recipientType": "signer",
+      "note": "",
+      "roleName": "Signer 1",
+      "statusCode": "sent",
+      "userId": "12345",
+      "clientUserId": null,
+      "embeddedRecipientStartURL": null,
+      "customFields": [],
+      "tabs": {
+        "signHereTabs": [
+          {
+            "tabId": "sign-1",
+            "documentId": "1",
+            "pageNumber": "1",
+            "xPosition": "100",
+            "yPosition": "200",
+            "optional": false,
+            "tabLabel": "Signature"
+          }
+        ],
+        "dateSignedTabs": [
+          {
+            "tabId": "date-1",
+            "documentId": "1",
+            "pageNumber": "1",
+            "xPosition": "300",
+            "yPosition": "200",
+            "optional": false,
+            "tabLabel": "Date Signed"
+          }
+        ]
+      }
+    }
+  ],
+  "carbonCopies": [
+    {
+      "recipientId": "2",
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "status": "sent",
+      "deliveredDateTime": null,
+      "signedDateTime": null,
+      "routingOrder": "2",
+      "recipientType": "cc",
+      "note": "",
+      "roleName": "CC 1",
+      "statusCode": "sent",
+      "userId": "67890"
+    }
+  ],
+  "agents": [],
+  "editors": [],
+  "intermediaries": [],
+  "inPersonSigners": [],
+  "certifiedDeliveries": [],
+  "recipientCount": 2
+}
