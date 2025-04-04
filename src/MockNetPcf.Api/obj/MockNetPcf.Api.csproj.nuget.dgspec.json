@@ -1,30 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\MockNetPcf.Api.csproj": {}
+    "C:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\MockNetPcf.Api.csproj": {}
   },
   "projects": {
-    "c:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\MockNetPcf.Api.csproj": {
+    "C:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\MockNetPcf.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\MockNetPcf.Api.csproj",
+        "projectUniqueName": "C:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\MockNetPcf.Api.csproj",
         "projectName": "MockNetPcf.Api",
-        "projectPath": "c:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\MockNetPcf.Api.csproj",
+        "projectPath": "C:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\MockNetPcf.Api.csproj",
         "packagesPath": "C:\\Users\\tribe\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\obj\\",
+        "outputPath": "C:\\Users\\tribe\\OneDrive\\Documents\\GitHub\\mock-netpcf\\src\\MockNetPcf.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\tribe\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "net8.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
-            "targetAlias": "net5.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -32,11 +32,16 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
-        "net5.0": {
-          "targetAlias": "net5.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -53,7 +58,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -65,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.407/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

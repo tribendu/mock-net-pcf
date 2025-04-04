@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\MockNetPcf.Api.props" />
+</Project>

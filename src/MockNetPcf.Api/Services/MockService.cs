@@ -7,6 +7,8 @@ using MockNetPcf.Api.Configuration;
 using MockNetPcf.Api.Models;
 using WireMock.Server;
 using WireMock.Settings;
+using WireMock.ResponseBuilders;
+using WireMock.RequestBuilders;
 
 namespace MockNetPcf.Api.Services
 {
@@ -96,7 +98,6 @@ namespace MockNetPcf.Api.Services
                 {
                     Port = _config.Port,
                     StartAdminInterface = _config.StartAdminInterface,
-                    AdminPort = _config.AdminPort,
                     AllowPartialMapping = true,
                     ReadStaticMappings = true,
                     WatchStaticMappings = true,
@@ -145,19 +146,22 @@ namespace MockNetPcf.Api.Services
                     return Task.FromResult(false);
                 }
 
-                var response = new ResponseMessage
+                var response = Response.Create()
+                    .WithStatusCode(mockDefinition.StatusCode)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBody(mockDefinition.ResponseBody);
+
+                // Add each response header individually
+                foreach (var header in mockDefinition.ResponseHeaders)
                 {
-                    StatusCode = mockDefinition.StatusCode,
-                    Headers = mockDefinition.ResponseHeaders,
-                    Body = mockDefinition.ResponseBody
-                };
+                    response = response.WithHeader(header.Key, header.Value);
+                }
 
                 _server
                     .Given(Request.Create()
                         .WithPath(mockDefinition.Path)
-                        .WithHeader(mockDefinition.RequestHeaders)
-                        .WithBody(mockDefinition.RequestBody)
-                        .UsingMethod(mockDefinition.Method))
+                        .UsingMethod(mockDefinition.Method)
+                        .WithBody(mockDefinition.RequestBody))
                     .RespondWith(response);
 
                 _logger.LogInformation($"Added mock for {mockDefinition.Method} {mockDefinition.Path} with status code {mockDefinition.StatusCode}");
