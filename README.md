@@ -1,11 +1,11 @@
 # Mock Service for PCF with WireMock.NET
 
-A PCF-deployable service that mocks external and internal services using WireMock.NET. This service provides a REST API and Swagger UI to manage mocks and control recording functionality.
+A PCF-deployable service that mocks external and internal HTTP APIs using WireMock.NET. This service provides a REST API and Swagger UI to manage mocks; in full-feature mode, it also supports recording live API traffic, but a minimal build may have this disabled.
 
 ## Features
 
 - Mock external and internal HTTP services
-- Record and replay HTTP interactions
+- *Optional:* Record and replay HTTP interactions
 - DocuSign API mocking capabilities
 - Swagger UI for API documentation and testing
 - Environment-specific configurations (DEV, QA)
@@ -13,8 +13,8 @@ A PCF-deployable service that mocks external and internal services using WireMoc
 - Configurable mock responses and behaviors
 - Support for stateful mocking scenarios
 - Request/response pattern matching
-- Dynamic response templating
-- Organized folder structure for mock responses
+- Dynamic response templating with Handlebars.NET
+- Organized folder structure for mock responses, easily maintainable
 
 ## Prerequisites
 
@@ -22,6 +22,8 @@ A PCF-deployable service that mocks external and internal services using WireMoc
 - Cloud Foundry CLI
 - Access to a PCF environment
 - Visual Studio 2022 or VS Code (recommended)
+- WireMock.NET NuGet package included automatically
+- Environment variables or vars-*.yml files configured per environment (see below)
 
 ## Getting Started
 
